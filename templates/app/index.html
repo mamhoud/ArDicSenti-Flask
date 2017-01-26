@@ -1,0 +1,221 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ArDicSenti</title>
+	<!--for-mobile-apps-->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta name="keywords" content="Combat Game Responsive Website Template, Web Templates, Flat Web Templates, Android Compatible web template,
+		Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony Ericsson, Motorola web design" />
+		<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+	<!--//for-mobile-apps-->
+
+	<!-- Custom-Theme-Files -->
+    <!-- Bootstrap-CSS --> 			<link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <!-- JQuery --> 				<script src= "../../static/js/jquery.min.js">			</script>
+    <!-- Bootstrap-Main --> 		<script src="../../static/js/bootstrap.min.js" >		</script>
+    <!-- Index-Page-Styling --> 	<link rel="stylesheet" href=  "../../static/css/style.css"  type="text/css" media="all">
+                                    <link rel="sourtcut icon" href="../../static/images/logo2.png" >
+<!-- Start-Smooth-Scrolling -->
+<script type="text/javascript" src= "../../static/js/move-top.js"></script>
+<script type="text/javascript" src= "../../static/js/easing.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $(".scroll").click(function(event){
+                event.preventDefault();
+                $('html,body').animate({scrollTop:$(this.hash).offset().top},2000);
+            });
+        });
+    </script>
+<!-- //End-Smooth-Scrolling -->
+
+<link rel="stylesheet" type="text/css" href= "../../static/css/easy-responsive-tabs.css "/>
+
+
+</head>
+
+<body>
+
+<div class="header">
+
+		<div class="nav">
+			<nav class="navbar navbar-inverse navbar-fixed-top">
+				<div class="container">
+				<!-- Brand and toggle get grouped for better mobile display -->
+						<div class="navbar-header">
+							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+
+						</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+
+					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+						<ul class="nav navbar-nav navbar-right">
+							<li><a href="#home" class="active scroll">Home</a></li>
+							<li><a href="#about" class="scroll">ADD</a></li>
+							<li><a href="#requirements" class="scroll">Improve</a></li>
+							<li><a href="#games" class="scroll">Download</a></li>
+							<li><a href="#games" class="scroll">API</a></li>
+						</ul>
+
+					</div><!-- navbar-collapse -->
+				</div><!-- container -->
+			</nav>
+		</div> <!-- Nav Ends -->
+
+		<div class="banner"  style="background: #112233" id="home">
+			<div class="container">
+				<div class="banner-content">
+				<a class="navbar-brand"href="#"><img src="../../static/images/logo2.png" alt="logo"></a>
+
+				</div>
+			</div>
+		</div> <!-- Banner Ends Here -->
+</div> <!-- Header Ends -->
+
+
+<div class="about" id="about" style="height: 380px">
+	<div class="container">
+
+		<h3> Add New Words here </h3>
+		<form id="addword_form" role="form" action="/app/addword/" method="post" >
+             {{ csrf_token }}
+
+			<div class="form-group col-lg-6">
+				<input type="text" class="form-control input-lg" id="text1" placeholder="enter new word" name="word">
+			</div>
+
+			<div class="form-group col-lg-3">
+				<div class="radio">
+  					<label><input id="positive" type="radio" name="addword"  value="po">Postive </label>
+				</div>
+				<div class="radio">
+  					<label><input id="negative" type="radio" name="addword"  value="ne">Negative  </label>
+				</div>
+				<div class="radio">
+  					<label><input id="misleading" type="radio" name="addword"  value="mis">Misleading  </label>
+				</div>
+			</div>
+
+			<div class="form-group col-lg-6">
+                <label id="addword_succ" style="color: green;"></label>
+				<button type="submit" class="btn btn-primary btn-block">Add Word</button>
+			</div>
+
+		</form>
+
+	</div> <!-- Container ends -->
+</div> <!-- Add Ends -->
+
+
+<div class="requirement" id="requirements"> <!-- improve Starts   -->
+	<div class="container">
+		<div class="all-require">
+
+				<div class="heading">
+					<h3 style="color: #0C0808">Improve</h3>
+				</div>
+				<form id="random_form"  role="form" action="/app/contribute/" method="post">
+                    {{ csrf_token }}
+					<div class="form-group row" style="width:600px;">
+						<label style="font-size: 150%;color: #F0F8FF;">What do you think this word is?</label>
+                        <input type="text" name="data" class="form-control input-lg" id="text2" disabled>
+					</div>
+
+						<div class="form-group">
+							<div class="radio">
+								<label style="color: #F0F8FF;"><input type="radio" name="optradio" value = "Postive">Postive</label>
+							</div>
+							<div class="radio">
+								<label style="color: #F0F8FF;"><input type="radio" name="optradio" value = "Negative">Negative</label>
+							</div>
+							<div class="radio">
+								<label style="color: #F0F8FF;"><input type="radio" name="optradio" value = "Misleading">Misleading</label>
+							</div>
+						</div>
+
+					<div class="form-group row" style="width:600px;">
+                        <label id="data_succ" style="color: green;"></label>
+						<button type="submit" class="btn btn-primary btn-block">Contribute</button>
+					</div>
+
+				</form>
+		</div>
+	  </div>
+	</div> <!-- improve Ends -->
+
+
+<div class="upcoming" id="games" style="background: #FC575E">
+	<div class="container">
+		<div class="padding-upcoming">
+			<h3>Download</h3>
+		</div>
+	<div class="container">
+		<div class="topleft">
+			<h6>Please Enter the Percentage of the files you need..</h6>
+		</div>
+
+		<form class="form-horizontal"  role="form" action='/app/download_file/'  method="post">
+             {{ csrf_token }}
+
+			<!--<form class="row" > -->
+
+			<div class = "row" id="row">
+				<div class="form-group">
+				<div  class="col-sm-1" >
+  					<label><input type="checkbox" name="optradio_po" value="postive" >Postive</label>
+				</div>
+				<div class="col-sm-1">
+  					<label><input type="checkbox" name="optradio_neg" value="negative">Negative</label>
+				</div>
+				<div class="col-sm-1">
+  					<label><input type="checkbox" name="optradio_mis" value="miss" >Missleading</label>
+				</div>
+
+				</div>
+                </div>
+			<div class="form-group">
+
+				<input type="text" class="col-sm-1" id="Postive" name="text-positive" placeholder="postive %" disabled>
+
+				<input type="text" class="col-sm-1" id="Nigative" name="text-negative" placeholder="Nigative %" disabled>
+
+				<input type="text" class="col-sm-1"  id="Missleading" name="text-misleading" placeholder="mislead %" disabled>
+
+			</div>
+
+			<!--</form> -->
+			<div class="form-group row" style="width: 600px" >
+				<button type="submit" class="btn btn-default btn-primary" >Download</button>
+			</div>
+
+		</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Download Ends Here -->
+<div class="contact" id="contact">
+  <div class="container">
+		<div class="footer">
+			<p>© 2016 ArDicSenti. All Rights Reserved</p>
+		</div>
+  </div>
+</div>
+	<script type="text/javascript" src="../../static/js/ajax.js"></script>
+</body>
+</html>
