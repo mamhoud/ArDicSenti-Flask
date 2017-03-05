@@ -1,9 +1,13 @@
+# -*- coding:utf-8 -*-
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import nltk
 import os, tempfile, zipfile
 import sys
 from imp import reload
 from io import BytesIO
+
+from flask import make_response
+from flask import send_file
 
 reload(sys)
 from nltk.tokenize import word_tokenize, sent_tokenize
@@ -17,7 +21,7 @@ from nltk.stem.isri import ISRIStemmer
 from nltk.corpus import stopwords
 
 import xlsxwriter
-from pandas._testing import isnull
+# from pandas._testing import isnull
 from xlrd import open_workbook
 import xlrd
 from xlutils.copy import copy
@@ -28,10 +32,10 @@ import pandas as pd
 
 app = Flask(__name__)
 
-@app.route("/app")
+@app.route("/")
 def index():
     return render_template(
-        '/app/index.html', )
+        'app/index.html', )
 
 # @app.route("/download_file")
 # def download():
@@ -43,10 +47,9 @@ def index():
 # sys.setdefaultencoding('utf-8')
 
 
-types = {'Root': 0, 'Positive': 1, 'Negative': 2, 'Mis': 3}
-data_set = [['Root', 'Positive', 'Negative', 'Mis'], ['حمد', 40, 90, 50], ['وقع', 0, 0, 0], ['لعب', 0, 0, 0],
-            ['شرب', 0, 0, 0], ['مشى', 0, 0, 0]]
-
+types = {'Root': 0, 'Positive': 1, 'Negative': 2, 'Mis': 3,  'Total': 4 , 'Sen': 5 ,}
+data_set = [['Root', 'Positive', 'Negative', 'Mis', 'Total'], ['حمد', 40, 90, 50, 180, 0], ['وقع', 0, 0, 0, 0, 0],
+            ['لعب', 0, 0, 0, 0, 0],['شرب', 0, 0, 0, 0, 0], ['مشى', 0, 0, 0, 0, 0]]
 
 def stemer(word):
     stem = ISRIStemmer()
@@ -62,19 +65,22 @@ def add_word(iRow, word):
     P = ws.cell(row=iRow + 1, column=2)
     N = ws.cell(row=iRow + 1, column=3)
     M = ws.cell(row=iRow + 1, column=4)
-
+    T = ws.cell(row=iRow + 1, column=5)
+    S = ws.cell(row=iRow + 1, column=6)
     R.value = word
     P.value = 0
     N.value = 0
     M.value = 0
+    T.value = 0
+    S.value = 0
     wb.save(path)
 
 
 # Create a workbook and add a worksheet.
 def createFile():
-    types = {'Root': 0, 'Positive': 1, 'Negative': 2, 'Mis': 3}
-    data_set = [['Root', 'Positive', 'Negative', 'Mis'], ['حمد', 40, 90, 50], ['وقع', 0, 0, 0], ['لعب', 0, 0, 0],
-                ['شرب', 0, 0, 0], ['مشى', 0, 0, 0]]
+    types = {'Root': 0, 'Positive': 1, 'Negative': 2, 'Mis': 3 , 'Total':4 , 'Sen': 5}
+    data_set = [['Root', 'Positive', 'Negative', 'Mis','Total'], ['حمد', 40, 90, 50 , 180 ,0], ['وقع', 0, 0, 0 , 0 , 0], ['لعب', 0, 0, 0 , 0 , 0],
+                ['شرب', 0, 0, 0 , 0 , 0], ['مشى', 0, 0, 0 , 0 , 0]]
     Row = 0
     Col = 0
     if not os.path.exists('inter.xlsx'):
@@ -92,9 +98,11 @@ def createFile():
         return "file exitsts"
 
 
+
 def search(word):
     r = 0
     x = 0
+
     read = open_workbook(r"inter.xlsx")
     for sheet in read.sheets():
         if sheet.name == 'Sheet1':
@@ -134,13 +142,19 @@ def contr_step_2():
 
     if radiobutton == "Postive":
         modifyPos(row, 1)
+        modifyTotal(row)
         return render_template( 'app/Positive_added.html')
     elif radiobutton == "Negative":
         modifyNeg(row, 1)
+        modifyTotal(row)
         return render_template( 'app/Negative_added.html')
     elif radiobutton == "Misleading":
         modifyMis(row, 1)
+        modifyTotal(row)
         return render_template('app/Missleading_added.html')
+    elif radiobutton == "Senseless":
+        modifySense(row,1)
+        return render_template('app/Meaningless_added.html')
 
 
 def modifyPos(iRow, newVal):
@@ -169,10 +183,25 @@ def modifyMis(iRow, newVal):
     c.value = c.value + newVal
     wb.save(path)
 
+def modifyTotal(iRow):
+    path = "inter.xlsx"
+    wb = load_workbook(path)
+    ws = wb.get_sheet_by_name("Sheet1")
+    c = ws.cell(row=iRow + 1, column=types['Total'] + 1)
+    c.value = c.value + 1
+    wb.save(path)
+def modifySense(iRow, newVal):
+    path = "inter.xlsx"
+    wb = load_workbook(path)
+    ws = wb.get_sheet_by_name("Sheet1")
+    c = ws.cell(row=iRow + 1, column=types['Sen'] + 1)
+    c.value = c.value + newVal
+    wb.save(path)
 
 def Summition(Positive, Negative, Misleading):
     per_array = []
     Sum = Positive + Negative + Misleading
+
     if Positive > 0:
         Per_pos = (Positive / Sum) * 100
         per_array.append(Per_pos)
@@ -191,7 +220,7 @@ def Summition(Positive, Negative, Misleading):
     return per_array
 
 
-def file_generator(positive_percentage=0, negative_percentage=0, misleading_percentage=0):
+def file_generator(positive_percentage=0, negative_percentage=0, misleading_percentage=0 , Threshold =1):
     # If You Want The Final Files As Excel
     # Positive_final = xlsxwriter.Workbook('Positive_final.xlsx')
     # worksheet_p = Positive_final.add_worksheet()
@@ -218,6 +247,7 @@ def file_generator(positive_percentage=0, negative_percentage=0, misleading_perc
                     s1 = sheet.cell(row, 1).value
                     s2 = sheet.cell(row, 2).value
                     s3 = sheet.cell(row, 3).value
+                    s4 = sheet.cell(row , 4 ).value
                     row_array = Summition(s1, s2, s3)
 
                     # worksheet_p.write(0, 0, "Root")
@@ -225,15 +255,15 @@ def file_generator(positive_percentage=0, negative_percentage=0, misleading_perc
                     # worksheet_m.write(0, 0, "Root")
 
                     if (int(row_array[0]) >= positive_percentage) and (int(row_array[0]) != 0) and (
-                        positive_percentage != 0):
+                        positive_percentage != 0 and s4 >= Threshold ):
                         data_pos.append(s)
 
                     if (int(row_array[1]) >= negative_percentage) and (int(row_array[1]) != 0) and (
-                        negative_percentage != 0):
+                        negative_percentage != 0 and s4 >= Threshold):
                         data_neg.append(s)
 
                     if (int(row_array[2]) >= misleading_percentage) and (int(row_array[2]) != 0) and (
-                        misleading_percentage != 0):
+                        misleading_percentage != 0 and s4 >= Threshold):
                         data_mis.append(s)
 
     pf = pd.DataFrame(data_pos, columns=["Root"])
@@ -263,96 +293,96 @@ def addword():
     radiobutton = request.form['addword']
     createFile()
 
-    if word == "" and radiobutton == "":
+    if  word == "" or radiobutton == "" :
         return render_template( 'app/Nothing_added.html')
     else:
         root = stemer(word)
         row = search(root)
         if radiobutton == "po":
+            modifyTotal(row)
             modifyPos(row, 1)
+
             return render_template('app/Positive_added.html')
         elif radiobutton == "ne":
+            modifyTotal(row)
             modifyNeg(row, 1)
+
             return render_template('app/Negative_added.html')
         elif radiobutton == "mis":
+            modifyTotal(row)
             modifyMis(row, 1)
             return render_template('app/Missleading_added.html')
 
 
-# def zip_file(request, filenames):
-#     filenames = filenames
-#     zip_subdir = "somefiles"
-#     zip_filename = "%s.zip" % zip_subdir
-#     s = BytesIO()
-#     zf = zipfile.ZipFile(s, "w")
-#     for fpath in filenames:
-#         fdir, fname = os.path.split(fpath)
-#         zip_path = os.path.join(zip_subdir, fname)
-#         zf.write(fpath, zip_path)
-#     zf.close()
-#     resp = HttpResponse(s.getvalue(), content_type="application/x-zip-compressed")
-#     resp['Content-Disposition'] = 'attachment; filename=%s' % zip_filename
-#     return resp
+def zip_file(filenames):
+    filenames = filenames
+    zfName = 'deal.rar'
+    foo = zipfile.ZipFile(zfName, 'w')
+    for i in range(len(filenames)):
+        foo.write(filenames[i])
+    foo.close()
+
+    return send_file(zfName, attachment_filename='deal.zip', as_attachment=True)
+
+@app.route('/app/download_file/',methods=['POST'])
+def download_file():
+    pos_percentage = request.form['text-positive']
+    neg_percentage = request.form['text-negative']
+    mis_percentage = request.form['text-misleading']
+    Threshold = request.form['text-Threshold']
+    value = request.form.getlist('optradio')
 
 
-# def download_file(request):
-#     pos_percentage = request.POST['text-positive']
-#     neg_percentage = request.POST['text-negative']
-#     mis_percentage = request.POST['text-misleading']
-#     value = request.POST.getlist("optradio")
-#     # if (pos_percentage != "" or neg_percentage != "" or mis_percentage != ""):
-#     #     file_generator(pos_percentage,neg_percentage,mis_percentage)
-#
-#     if len(value) == 3:
-#
-#         if value[0] == 'postive' and value[1] == 'negative' and value[
-#             2] == "miss" and pos_percentage != "" and neg_percentage != "" and mis_percentage != "":
-#             file_generator(int(pos_percentage), int(neg_percentage), int(mis_percentage))
-#             filenames = ["Final_positive.csv", "Final_negative.csv", "Final_misleading.csv"]
-#             return zip_file(request, filenames)
-#
-#
-#
-#     elif len(value) == 2:
-#
-#         if value[0] == 'postive' and value[1] == 'negative' and pos_percentage != "" and neg_percentage != "":
-#             file_generator(int(pos_percentage), int(neg_percentage))
-#             filenames = ["Final_positive.csv", "Final_negative.csv"]
-#             return zip_file(request, filenames)
-#
-#         elif value[0] == 'postive' and value[1] == 'miss' and pos_percentage != "" and mis_percentage != "":
-#             file_generator(int(pos_percentage), 0, int(mis_percentage))
-#             filenames = ["Final_positive.csv", "Final_misleading.csv"]
-#
-#             return zip_file(request, filenames)
-#
-#         elif value[0] == 'negative' and value[1] == 'miss' and neg_percentage != "" and mis_percentage != "":
-#             file_generator(0, int(neg_percentage), int(mis_percentage))
-#             filenames = ["Final_negative.csv", "Final_misleading.csv"]
-#             return zip_file(request, filenames)
-#
-#
-#
-#     elif len(value) == 1:
-#
-#         if value[0] == 'postive' and pos_percentage != "":
-#             file_generator(int(pos_percentage))
-#             filenames = ["Final_positive.csv"]
-#             return zip_file(request, filenames)
-#
-#
-#         elif value[0] == 'negative' and neg_percentage != "":
-#             file_generator(0, int(neg_percentage))
-#             filenames = ["Final_negative.csv"]
-#             return zip_file(request, filenames)
-#
-#         elif value[0] == 'miss' and mis_percentage != "":
-#             file_generator(0, 0, int(mis_percentage))
-#             filenames = ["Final_misleading.csv"]
-#
-#             return zip_file(request, filenames)
-#
-#
+    if len(value) == 3:
+
+        if value[0] == 'postive' and value[1] == 'negative' and value[2] == "miss" and pos_percentage != "" and neg_percentage != "" and mis_percentage != ""and Threshold != "":
+
+            file_generator(int(pos_percentage), int(neg_percentage), int(mis_percentage) , int(Threshold))
+            filenames = ["Final_positive.csv", "Final_negative.csv", "Final_misleading.csv"]
+            return zip_file(filenames)
+
+
+
+    elif len(value) == 2:
+
+        if value[0] == 'postive' and value[1] == 'negative' and pos_percentage != "" and neg_percentage != "" and Threshold != "":
+            file_generator(int(pos_percentage), int(neg_percentage),0, int(Threshold))
+            filenames = ["Final_positive.csv", "Final_negative.csv"]
+            return zip_file( filenames)
+
+        elif value[0] == 'postive' and value[1] == 'miss' and pos_percentage != "" and mis_percentage != "" and Threshold != "":
+            file_generator(int(pos_percentage), 0, int(mis_percentage), int(Threshold))
+            filenames = ["Final_positive.csv", "Final_misleading.csv"]
+
+            return zip_file( filenames)
+
+        elif value[0] == 'negative' and value[1] == 'miss' and neg_percentage != "" and mis_percentage != "" and Threshold != "":
+            file_generator(0, int(neg_percentage), int(mis_percentage),int(Threshold))
+            filenames = ["Final_negative.csv", "Final_misleading.csv"]
+            return zip_file( filenames)
+
+
+
+    elif len(value) == 1:
+
+        if value[0] == 'postive' and pos_percentage != "" and Threshold != "":
+            file_generator(int(pos_percentage),0,0,int(Threshold))
+            filenames = ["Final_positive.csv"]
+            return zip_file( filenames)
+
+
+        elif value[0] == 'negative' and neg_percentage != "" and Threshold != "":
+            file_generator(0, int(neg_percentage),0,int(Threshold))
+            filenames = ["Final_negative.csv"]
+            return zip_file( filenames)
+
+        elif value[0] == 'miss' and mis_percentage != "" and Threshold != "":
+            file_generator(0, 0, int(mis_percentage),int(Threshold))
+            filenames = ["Final_misleading.csv"]
+
+            return zip_file( filenames)
+
+
 if __name__ == "__main__":
     app.run()
 

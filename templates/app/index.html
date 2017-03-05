@@ -95,7 +95,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
              {{ csrf_token }}
 
 			<div class="form-group col-lg-6">
-				<input type="text" class="form-control input-lg" id="text1" placeholder="enter new word" name="word">
+				<input type="text"  name="word" class="form-control input-lg" id="text1" placeholder="enter new word" name="word">
 			</div>
 
 			<div class="form-group col-lg-3">
@@ -145,6 +145,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							<div class="radio">
 								<label style="color: #F0F8FF;"><input type="radio" name="optradio" value = "Misleading">Misleading</label>
 							</div>
+									<div class="radio">
+								<label style="color: #F0F8FF;"><input type="radio" name="optradio" value = "Senseless">Meaningless</label>
+							</div>
+
 						</div>
 
 					<div class="form-group row" style="width:600px;">
@@ -176,24 +180,26 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<div class = "row" id="row">
 				<div class="form-group">
 				<div  class="col-sm-1" >
-  					<label><input type="checkbox" name="optradio_po" value="postive" >Postive</label>
+  					<label><input type="checkbox" id="pos" name="optradio" value="postive" >Postive</label>
 				</div>
 				<div class="col-sm-1">
-  					<label><input type="checkbox" name="optradio_neg" value="negative">Negative</label>
+  					<label><input type="checkbox" id="ne" name="optradio" value="negative">Negative</label>
 				</div>
 				<div class="col-sm-1">
-  					<label><input type="checkbox" name="optradio_mis" value="miss" >Missleading</label>
+  					<label><input type="checkbox"  id="mis"name="optradio" value="miss" >Missleading</label>
 				</div>
 
 				</div>
                 </div>
 			<div class="form-group">
 
-				<input type="text" class="col-sm-1" id="Postive" name="text-positive" placeholder="postive %" disabled>
+				<input type="text" class="col-sm-1" id="Postive" name="text-positive" placeholder="postive %" >
 
-				<input type="text" class="col-sm-1" id="Nigative" name="text-negative" placeholder="Nigative %" disabled>
+				<input type="text" class="col-sm-1" id="Nigative" name="text-negative" placeholder="Nigative %" >
 
-				<input type="text" class="col-sm-1"  id="Missleading" name="text-misleading" placeholder="mislead %" disabled>
+				<input type="text" class="col-sm-1"  id="Missleading" name="text-misleading" placeholder="mislead %" >
+
+				<input type="text" class="col-sm-2"  id="Threshold" name="text-Threshold" placeholder="VOte At Least Is (Number)" >
 
 			</div>
 
