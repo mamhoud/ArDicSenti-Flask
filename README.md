@@ -44,6 +44,9 @@ We need more contribution and more Arabic words that allowed us to generate more
 3. Make sentiment That working with this project .
 
 `This Project is made in Ibm internship `.
+
+
+
 ![Alt](https://pbs.twimg.com/profile_images/818463874471067648/tEThY0fk_400x400.jpg)
 
 [1]: https://ardicsenti-flask.eu-gb.mybluemix.net/
