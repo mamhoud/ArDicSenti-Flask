@@ -1,4 +1,4 @@
-# ArDicSenti 
+# ArDicSenti ![Alt](https://lh3.googleusercontent.com/D21XP_ApAxum5easjjq2yDVwrASxhIUqAfCXlHpbFBByVOUe7Wc0SW-q4pdcMPA_j3sUfq3XON1LuIRBY4gAXpCjXs5T3VzWTjEonXIZ_9MTZ1ZcgoK2ixuRl2eV6e9lrhaqPc4Orrx-f3p4WzUPffZiqXP4gAijM6wx7_ecdBvIMGBXOmubH15pC3FixsprtotyJQYPBdkpQxMvwz25YlV4xBHfIsLcfh0G2V_o4SyvLM_rX8Qf0KxXLuvYBaull3vSVonfu8WhQn9g14aZVMrbCfRh-jvFLo-pgptJevghMM166dIcWHw3z8p21xyURuhBJy5KTx1pRGEI2ALzYdxembbZME1QY7Bb3wLF1TzS9wHKqGQuPzV8PklQhfRjNkcn2gw7fGKc4RLw8aIe7CX4hvjDiwNCVLhUotk6SZDOWN758wgTkUO3XGq7RISzbgsnYv5mDAfCETgcqmRTYzma5IXHGMa7iGM85B63NMLixgXwZR15enjj5jr7v09rZoAH3X8sLWN2MDP8EKz-WMKtoTG1IX-DXiBN6ffTQ67WZ5_8J_0BkJg-rl1_Mquqw192mTKuoxtE4YM1NtWvl00cUpIAgEQR-YCrGpUWjiU6Q_I=w310-h240-no)
 ArDicSenti 
 : Is a lexicon that help Developer in Sentiment analysis , there are more than one lexicon for this aim but we make it OPen and it for arabic , 
 we make user in and allowed others to make contribution , it made by python Flask after upgrade from Djanngo Python too , There is no one common Arabic lexicon dictionary, annotated with the polarity, that can be used as a basic start for Ar sentiment analysis projects
